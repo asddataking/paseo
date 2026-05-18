@@ -1,0 +1,2 @@
+-- See migration 004_core_architecture_alignment applied via Supabase MCP
+-- Aligns: signal_value, active_signals, user_behavior_events, user_collections, feed_card_summaries

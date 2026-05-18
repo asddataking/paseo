@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+:root {
+  --background: #faf7f2;
+  --sand: #f0e6d8;
+  --foreground: #1c1917;
+  --accent-gold: #c9a227;
+  --accent-amber: #d97706;
+  --accent-sunset: #ea580c;
+  --card: #ffffff;
+  --card-shadow: 0 1px 3px rgb(28 25 23 / 0.08);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-sand: var(--sand);
+  --color-gold: var(--accent-gold);
+  --font-sans: var(--font-geist-sans);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+.font-serif {
+  font-family: var(--font-serif), "Playfair Display", Georgia, serif;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
