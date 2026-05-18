@@ -63,7 +63,13 @@ export function useCopilot() {
           body: JSON.stringify({ choice: option.id, action: option.action }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? "Request failed");
+        if (!res.ok) {
+          throw new Error(
+            data.error ??
+              data.answer ??
+              `Request failed (${res.status})`,
+          );
+        }
         applyPayload(data);
       } catch (e) {
         setError(e instanceof Error ? e.message : "Something went wrong");
