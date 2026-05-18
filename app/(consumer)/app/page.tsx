@@ -1,28 +1,20 @@
-import { FeedCard } from "@/components/consumer/FeedCard";
-import { buildIntelligentFeed } from "@/lib/feed/buildFeed";
+import { HomeScreen } from "@/components/consumer/home/HomeScreen";
+import { getHomeData, getTimeGreeting } from "@/lib/consumer/getHomeData";
 
 export default async function HomePage() {
-  const feed = await buildIntelligentFeed();
+  const { feed, displayName, membershipTier, memberSince, collections } =
+    await getHomeData();
+
+  const greeting = getTimeGreeting(new Date().getHours());
 
   return (
-    <div className="space-y-6">
-      <header>
-        <p className="text-sm font-medium text-[var(--accent-gold)]">Paseo</p>
-        <h1 className="text-2xl font-semibold">Worth going now</h1>
-        <p className="mt-1 text-sm text-stone-600">
-          Curated for you — live wait, signals, and perks
-        </p>
-      </header>
-
-      {feed.length === 0 ? (
-        <p className="text-center text-stone-500">No live businesses yet.</p>
-      ) : (
-        <div className="space-y-4">
-          {feed.map((card) => (
-            <FeedCard key={card.businessId} card={card} />
-          ))}
-        </div>
-      )}
-    </div>
+    <HomeScreen
+      greeting={greeting}
+      displayName={displayName}
+      membershipTier={membershipTier}
+      memberSince={memberSince}
+      feed={feed}
+      collections={collections}
+    />
   );
 }

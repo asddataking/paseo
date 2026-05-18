@@ -1,6 +1,8 @@
+import { BusinessMapLoader } from "@/components/consumer/BusinessMapLoader";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { getConsumerFeed } from "@/lib/admin/queries";
+import { toMapMarkers } from "@/lib/map/toMapMarkers";
 import { formatRelativeTime } from "@/lib/utils";
 
 function waitBadgeColor(wait: string | null | undefined) {
@@ -15,37 +17,42 @@ function waitBadgeColor(wait: string | null | undefined) {
 
 export default async function MapPage() {
   const feed = await getConsumerFeed();
+  const markers = toMapMarkers(feed);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <header>
         <h1 className="text-2xl font-semibold">Map</h1>
         <p className="mt-1 text-sm text-stone-600">
-          Live status — map view coming soon
+          Live status near you — tap a pin for details
         </p>
       </header>
 
-      {feed.length === 0 ? (
-        <p className="text-center text-stone-500">No businesses on the map yet.</p>
+      <BusinessMapLoader markers={markers} />
+
+      {markers.length === 0 ? (
+        <p className="text-center text-sm text-stone-500">
+          No businesses on the map yet. Check back when partners go live.
+        </p>
       ) : (
-        <ul className="space-y-3">
+        <ul className="space-y-2">
           {feed.map(({ business, status }) => (
             <li key={business.id}>
-              <Card className="p-4">
-                <div className="flex items-start justify-between gap-3">
+              <Card className="p-3">
+                <div className="flex items-start justify-between gap-2">
                   <div>
-                    <p className="font-semibold">{business.name}</p>
+                    <p className="font-medium">{business.name}</p>
                     {business.address && (
-                      <p className="text-sm text-stone-500">{business.address}</p>
+                      <p className="text-xs text-stone-500">{business.address}</p>
                     )}
-                    <p className="mt-1 text-xs text-stone-400">
-                      {status?.last_updated_at
-                        ? formatRelativeTime(status.last_updated_at)
-                        : "No updates"}
-                    </p>
                   </div>
+                  <span className="text-[10px] text-stone-400">
+                    {status?.last_updated_at
+                      ? formatRelativeTime(status.last_updated_at)
+                      : "—"}
+                  </span>
                 </div>
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div className="mt-2 flex flex-wrap gap-1.5">
                   {status?.wait_status && (
                     <Badge color={waitBadgeColor(status.wait_status)}>
                       {status.wait_status}
@@ -53,9 +60,6 @@ export default async function MapPage() {
                   )}
                   {status?.availability_status && (
                     <Badge color="green">{status.availability_status}</Badge>
-                  )}
-                  {status?.active_note && (
-                    <Badge>{status.active_note}</Badge>
                   )}
                 </div>
               </Card>

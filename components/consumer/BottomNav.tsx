@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Compass, Gift, Map, User } from "lucide-react";
+import { Home, Gift, Map, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tabs = [
   { href: "/app", label: "Home", icon: Home, exact: true },
-  { href: "/app/explore", label: "Explore", icon: Compass },
-  { href: "/app/perks", label: "Perks", icon: Gift },
   { href: "/app/map", label: "Map", icon: Map },
+  { href: "/app/perks", label: "Perks", icon: Gift },
   { href: "/app/account", label: "Account", icon: User },
 ] as const;
 
@@ -31,12 +30,17 @@ export function BottomNav() {
               href={href}
               className={cn(
                 "flex flex-1 flex-col items-center gap-0.5 px-2 py-2.5 text-xs transition",
-                active
-                  ? "text-[var(--accent-gold)]"
-                  : "text-stone-500 hover:text-stone-800"
+                active ? "text-[var(--accent-gold)]" : "text-stone-500",
               )}
             >
-              <Icon className="h-5 w-5" strokeWidth={active ? 2.5 : 2} />
+              <span
+                className={cn(
+                  "flex h-8 w-10 items-center justify-center rounded-xl transition",
+                  active && "bg-[#faf3e0]",
+                )}
+              >
+                <Icon className="h-5 w-5" strokeWidth={active ? 2.5 : 2} />
+              </span>
               <span className={cn("font-medium", active && "font-semibold")}>
                 {label}
               </span>
