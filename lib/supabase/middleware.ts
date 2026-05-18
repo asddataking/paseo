@@ -1,7 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { getProfileRole } from "@/lib/auth/profile";
 
 const PROTECTED_PREFIXES = ["/admin", "/infra", "/app"];
+
 function isProtectedPath(path: string) {
   return PROTECTED_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`));
 }
@@ -44,11 +46,12 @@ export async function updateSession(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
 
-  // Logged-in users should not stay on login
   if (path === "/login" && user) {
-    const dest =
-      request.nextUrl.searchParams.get("redirect")?.trim() || "/app";
-    const safeDest = dest.startsWith("/") && !dest.startsWith("//") ? dest : "/app";
+    const explicitRedirect = request.nextUrl.searchParams.get("redirect")?.trim();
+    const role = await getProfileRole(user.id, supabase);
+    let dest = explicitRedirect || (role === "admin" ? "/admin" : "/app");
+    const safeDest =
+      dest.startsWith("/") && !dest.startsWith("//") ? dest : "/app";
     const url = request.nextUrl.clone();
     url.pathname = safeDest;
     url.search = "";
@@ -66,13 +69,7 @@ export async function updateSession(request: NextRequest) {
     return mergeCookies(supabaseResponse, NextResponse.redirect(url));
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  const role = profile?.role ?? "consumer";
+  const role = await getProfileRole(user.id, supabase);
 
   if (path.startsWith("/admin") && role !== "admin") {
     const url = request.nextUrl.clone();

@@ -1,4 +1,5 @@
 import { Playfair_Display } from "next/font/google";
+import { AdminShortcut } from "@/components/admin/AdminShortcut";
 import { BottomNav } from "@/components/consumer/BottomNav";
 
 const playfair = Playfair_Display({
@@ -18,6 +19,7 @@ export default function ConsumerAppLayout({
       <main className="mx-auto w-full max-w-lg flex-1 px-4 pb-24 pt-0">
         {children}
       </main>
+      <AdminShortcut />
       <BottomNav />
     </div>
   );

@@ -61,8 +61,20 @@ export function LoginForm() {
       if (err) {
         setError(err.message);
       } else {
+        const {
+          data: { user: signedIn },
+        } = await supabase.auth.getUser();
+        let dest = safeRedirect;
+        if (signedIn && safeRedirect === "/app") {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("role")
+            .eq("id", signedIn.id)
+            .maybeSingle();
+          if (profile?.role === "admin") dest = "/admin";
+        }
         router.refresh();
-        router.push(safeRedirect);
+        router.push(dest);
       }
     }
 

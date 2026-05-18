@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { getProfileRole } from "@/lib/auth/profile";
 import { createClient } from "@/lib/supabase/server";
 import type { MembershipTier } from "@/lib/tiers";
 import { SignOutButton } from "@/components/auth/SignOutButton";
@@ -40,6 +41,7 @@ export default async function AccountPage() {
   let fullName = "Member";
   let tier: MembershipTier = "free";
   let email: string | null = null;
+  let isAdmin = false;
 
   if (user) {
     const { data: profile } = await supabase
@@ -50,6 +52,7 @@ export default async function AccountPage() {
     fullName = profile?.full_name ?? user.email?.split("@")[0] ?? "Member";
     tier = (profile?.membership_tier ?? "free") as MembershipTier;
     email = profile?.email ?? user.email ?? null;
+    isAdmin = (await getProfileRole(user.id, supabase)) === "admin";
   }
 
   return (
@@ -108,6 +111,15 @@ export default async function AccountPage() {
           ))}
         </div>
       </section>
+
+      {isAdmin && (
+        <Link
+          href="/admin"
+          className="block rounded-2xl bg-stone-900 py-3.5 text-center text-sm font-semibold text-white shadow-md"
+        >
+          Open Admin Dashboard →
+        </Link>
+      )}
 
       <div className="text-center">
         <SignOutButton />
