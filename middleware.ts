@@ -7,9 +7,10 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/admin/:path*",
-    "/infra/:path*",
-    "/app/:path*",
-    "/login",
+    /*
+     * Refresh Supabase session on navigations (required for SSR auth).
+     * Skip static assets and images.
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };

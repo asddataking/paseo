@@ -1,0 +1,7 @@
+-- Auth is configured in Supabase Dashboard (Authentication → URL Configuration):
+-- Site URL: https://paseo-ten.vercel.app (and http://localhost:3000 for local)
+-- Redirect URLs:
+--   https://paseo-ten.vercel.app/auth/callback
+--   http://localhost:3000/auth/callback
+--
+-- Profile creation on signup: trigger on_auth_user_created → handle_new_user()

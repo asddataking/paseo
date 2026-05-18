@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 import type { MembershipTier } from "@/lib/tiers";
+import { SignOutButton } from "@/components/auth/SignOutButton";
 import Link from "next/link";
 
 const PLANS = [
@@ -108,9 +109,9 @@ export default async function AccountPage() {
         </div>
       </section>
 
-      <Link href="/login" className="block text-center text-sm text-stone-500 underline">
-        Sign out / switch account
-      </Link>
+      <div className="text-center">
+        <SignOutButton />
+      </div>
     </div>
   );
 }
